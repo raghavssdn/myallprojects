@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .img{
+            width: 150px;
+            height: 150px;
+        }
+    </style>
+    <script>
+        function printImage (url){
+            let div = document.querySelector('#result');
+            let img = document.createElement('img');
+            div.appendChild(img);
+            img.src = url;
+            img.className = 'img';
+        }
+        function Server() {
+            let txt = document.querySelector('#txt').value;
+            let url = `http://api.giphy.com/v1/gifs/search?api_key=rZG92tLwKwfIosq2SnGa0i4WVnm9XBvs&q=${txt}&limit=25`;
+            let promise = fetch(url)
+            promise.then(response=>{
+                response.json().then(data=>{
+                    console.log('Data is ',data)
+                    document.querySelector('#result').innerHTML = '';
+                    for(let ele of data.data){
+                        let url = ele.images.original.url;
+                        console.log('image is ',url)
+                        printImage(url);
+                    }
+                }).catch(err=>{
+                    console,log('Invalid Json',err)
+                })
+            }).catch(err=>{
+                console.log('Sorry server fails to fetch the data',err);
+            })
+        }
+    </script>
+</head>
+
+<body>
+    <input type="text" id="txt">
+    <button onclick="Server()">Search</button>
+    <div id="result"></div>
+</body>
+
+</html>
